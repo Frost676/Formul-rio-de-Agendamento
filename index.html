@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">CPF <span class="required-star">*</span></label>
-                    <input type="text" id="cpf" class="form-control" placeholder="000.000.000-00" required>
+                    <input type="text" id="cpf" class="form-control" placeholder="000.000.000-00" maxlength="14" required>
                 </div>
             </div>
             <div class="mb-3">
@@ -45,11 +45,11 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Telefone principal <span class="required-star">*</span></label>
-                    <input type="tel" id="tel_principal" class="form-control" placeholder="(00) 00000-0000" required>
+                    <input type="tel" id="tel_principal" class="form-control" placeholder="(00) 00000-0000" maxlength="15" required>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Telefone para recado <span class="required-star">*</span></label>
-                    <input type="tel" id="tel_recado" class="form-control" placeholder="(00) 00000-0000" required>
+                    <input type="tel" id="tel_recado" class="form-control" placeholder="(00) 00000-0000" maxlength="15" required>
                 </div>
             </div>
             <div class="mb-3">
@@ -61,7 +61,7 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label class="form-label">CEP <span class="required-star">*</span></label>
-                    <input type="text" id="cep" class="form-control" placeholder="00000-000" required>
+                    <input type="text" id="cep" class="form-control" placeholder="00000-000" maxlength="9" required>
                 </div>
                 <div class="col-md-8 mb-3">
                     <label class="form-label">Rua <span class="required-star">*</span></label>
@@ -176,6 +176,36 @@
 </div>
 
 <script>
+    // --- MÁSCARAS DE ENTRADA ---
+    
+    // Máscara de CPF: 000.000.000-00
+    document.getElementById('cpf').addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, ''); 
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        e.target.value = value;
+    });
+
+    // Máscara de Telefone: (00) 00000-0000
+    function mascaraTelefone(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
+        value = value.replace(/(\d)(\d{4})$/, '$1-$2');
+        e.target.value = value;
+    }
+    document.getElementById('tel_principal').addEventListener('input', mascaraTelefone);
+    document.getElementById('tel_recado').addEventListener('input', mascaraTelefone);
+
+    // Máscara de CEP: 00000-000
+    document.getElementById('cep').addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, '');
+        value = value.replace(/^(\d{5})(\d)/, '$1-$2');
+        e.target.value = value;
+    });
+
+    // --- LÓGICA DO FORMULÁRIO ---
+
     // Função para mostrar/esconder e gerenciar a obrigatoriedade da Forma de Pagamento
     function toggleFormaPagamento() {
         const semFidelidade = document.getElementById('sem_fidelidade').checked;
